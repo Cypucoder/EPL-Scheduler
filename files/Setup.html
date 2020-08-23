@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="Setup" id="top">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
+<meta charset='utf-8' />
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.min.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js'></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="./events/css/IT.css">
+<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js'></script>
+<script src='../fullcalendar.min.js'></script>
+<link href='../fullcalendar.css' rel='stylesheet' />
+<link href='../fullcalendar.print.css' rel='stylesheet' media='print' />
+<script src='../calendar.js'></script>
+<script src='../code.js'></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-cookies.js"></script>
+    
+<style>
+
+	body {
+		margin: 40px 10px;
+		padding: 0;
+		font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+		font-size: 14px;
+	}
+
+	#calendar {
+		max-width: 900px;
+		margin: 0 auto;
+	}
+
+</style>
+</head>
+<body ng-controller="Setup">
+ <!--http://www.oodlestechnologies.com/blogs/Fullcalendar-Walk-through-with-AngularJS-->
+   <!--http://www.dillingermediaonline.com/atlanta-web-developer/angularjs-calendar-2261/-->
+    <!--http://stackoverflow.com/questions/24910283/anguralui-calendar-initialising-issue-typeerror-cannot-read-property-length-->
+    <!--http://phpeventcalendar.com/category/docs/-->
+    <!--https://github.com/angular-ui/ui-calendar/issues/99-->
+    <!--https://github.com/angular-ui/ui-calendar/blob/master/src/calendar.js#L251-->
+<nav role="navigation" class="navbar navbar-default" style="position: fixed; top: 0;left:0; width: 100%; z-index: 5;"><!-- ng-controller="data_get"-->
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!--<a href="#Home" class="navbar-brand">EventList</a>-->
+                <a href="#" class="navbar-brand">Events</a>
+            </div>
+            <!-- Collection of nav links and other content for toggling -->
+            <div id="navbarCollapse" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="http://localhost/epl/eventkeeper/Cal.html" id="NavCal">Calendar</a></li>
+                    <!--<li><a href="#/redir/t" >Events</a></li>-->
+                    <li><a href="http://localhost/epl/eventkeeper/events" id="NavEList">Events</a></li>
+                    <li ng-show="LoggedIn"><a href="http://localhost/epl/eventkeeper/schedule.html">New Event</a></li>
+                    <!--<li><a href="../schedule.html" id="NavNSched">New Sched</a></li>-->
+                </ul>
+                <ul class="nav navbar-nav navbar-right" style="margin-right: 10px;">
+                    <li ng-if="LoggedIn"><a href="http://localhost:3000/Login.html">Logout<!--<div ng-show="!LoggedIn">Login</div>--></a></li>
+                     <!--<li><a href="/redir/t">Logout</a></li>-->
+                </ul>
+            </div>
+        </nav>
+   <div style="margin-top: 100px;"></div>  
+<div id="calendar" class="calendar" ng-model="eventSources" calendar="myCalendar" config="uiConfig.calendar" ui-calendar="uiConfig.calendar"></div>
+    
+    <div class="alert-success calAlert" ng-show="alertMessage != undefined && alertMessage != ''">
+    <h4>{{alertMessage}}</h4>
+</div>
+    
+<ul class="unstyled">
+    <li ng-repeat="e in events | filter:currentDate">
+        <div class="alert alert-info">
+            <a class="close" ng-click="remove($index)"><i class="icon-remove"></i></a>
+            <b> {{e.title}}</b> - {{e.start | date:"MMM dd"}}
+        </div>
+    </li>
+</ul>
+
+    <!--<div id='calendar'></div>-->
+
+</body>
+    <script>
+        if (!window.console) window.console = {};
+if (!window.console.log) window.console.log = function () { };
+    </script>
+</html>

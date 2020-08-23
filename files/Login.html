@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
+    <title></title>
+    <link rel="stylesheet" href="./events/css/IT.css">
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    
+    <!--The following is needed for angular data return compatibility between all browsers. Even though some of it is commented out, it's actually being read by IE or another browser. -->
+    
+    <!--[if (IE)]><script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.29/angular.min.js"></script>
+                  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.29/angular-cookies.js"></script>
+<![endif]-->
+    
+    <!--[if !(IE)]><!-->  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-cookies.js"></script>
+<!--<![endif]-->
+    
+<!--http://stackoverflow.com/questions/9900311/how-do-i-target-only-internet-explorer-10-for-certain-situations-like-internet-e -->    
+   <script>
+    /*@cc_on
+      @if (@_jscript_version == 10)
+          document.write('<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.29/angular.min.js"/><script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.29/angular-cookies.js">');
+      @end
+    @*/
+</script>
+    
+    <!--JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    
+    <!--Bootstrap is needed as a simple css solution -->
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    
+    <!--Angular route and angular messages are tools for better data returning. Route is used for "one page" websites. Angular Messages is used for validation -->
+    
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+    
+    <!-- Socket.io will be used for realtime data returning such as live updating of tickets and notifications. It can also be used for login.  -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+
+    <!-- Code.js is used for defining how data is returned. Turning multiple sql statements and more into something as simple as {{x.variable}} -->
+    <script src="./code.js"></script>
+    
+    <script src="./build/jquery.datetimepicker.full.min.js"></script>
+    <script src="./build/jquery.periodpicker.min.js"></script>
+    <script src="./build/jquery.timepicker.min.js"></script>
+    <script src="./build/jquery.mousewheel.min.js"></script>
+    <link rel="stylesheet" href="./css/jquery.periodpicker.min.css">
+	<link rel="stylesheet" href="./css/jquery.timepicker.css">
+    <link rel="stylesheet" type="text/css" href="./css/jquery.datetimepicker.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/jquery.datetimepicker.css"/>
+    
+    
+    <!--Used to send Checkboxes-->
+    <script src="./checklist-model.js"></script>
+    
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js'></script>
+<script src='../fullcalendar.min.js'></script>
+<link href='../fullcalendar.css' rel='stylesheet' />
+<link href='../fullcalendar.print.css' rel='stylesheet' media='print' />
+<script src='../calendar.js'></script>
+    
+    
+    <!--For validating input-->
+    <script type="text/javascript" src="./ngRemoteValidate.0.6.1.min.js"></script>
+    
+    
+</head>
+
+<body ng-app="myScheduleApp" ng-controller="Login">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header"><a class="navbar-brand navbar-link" href="#">Login </a>
+                <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+            </div>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="nav navbar-nav"></ul>
+            </div>
+        </div>
+    </nav>
+    <div ng-if="show">
+    <ng-form id="lI" name="lI" action="" novalidate>
+    <div class="container-fluid">
+        <div class="col-lg-4 col-md-5 col-sm-6 col-sm-offset-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Login </h3></div>
+                <div class="panel-body">
+                    <div class="col-xs-9 col-xs-push-2">
+                        <input type="text" ng-model="lI.lUser" placeholder="User Name" ng-keypress="$event.keyCode == 13 && Login(lI)">
+                    </div>
+                    <hr>
+                    <div class="col-xs-9 col-xs-push-2">
+                        <input type="password" ng-model="lI.lPass" placeholder="Password" ng-keypress="$event.keyCode == 13 && Login(lI)">
+                    </div>
+                    <div class="col-xs-9 col-xs-push-2" style="margin-top: 20px">
+                        <input type="submit" ng-click="Login(lI);" ng-model="lI.Login" id="send"/>
+                    </div>
+                        <div class="col-xs-9 col-xs-push-2" style="margin-top: 20px;">{{resu}}</div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    </ng-form>
+        </div>
+    <div ng-if="show2">
+            <div class="col-xs-9 col-xs-offset-3"><h1>You've been logged out</h1></div>
+    </div>
+    <script type="text/javascript">
+		/*$('#eStart').datetimepicker({
+            //format:'l m-d-Y h:i a',
+            format:'Y-m-d H:i'
+            
+        });
+        $('#eEnd').datetimepicker({
+            format:'Y-m-d H:i'
+        });
+        $('#prepStart').datetimepicker({
+            //format:'l m-d-Y h:i a',
+            format:'Y-m-d H:i'
+            
+        });
+        $('#TearDownEnd').datetimepicker({
+            format:'Y-m-d H:i'
+        });*/
+            
+            (function($, ng) {
+  'use strict';
+
+  var $val = $.fn.val; // save original jQuery function
+
+  // override jQuery function
+  $.fn.val = function (value) {
+    // if getter, just return original
+    if (!arguments.length) {
+      return $val.call(this);
+    }
+
+    // get result of original function
+    var result = $val.call(this, value);
+
+    // trigger angular input (this[0] is the DOM object)
+    ng.element(this[0]).triggerHandler('input');
+
+    // return the original result
+    return result; 
+  }
+})(window.jQuery, window.angular);
+	</script>
+    <script>
+        var socket = io();
+         var $time = $('#timecheck');
+
+         socket.on('Login', function(res){
+             if (res == true)
+                 {
+                     var html = "Time is available";
+                     //$time.html(html);
+
+                   $('#timecheck').append($('<li>').text("Time is available"));
+                   console.log("Success");
+                 }
+             else
+                 {
+                     var html = "Time is not available";
+                     //$time.html(html);
+                    $('#timecheck').append($('<p>').text("Time is aleady taken"));
+                    console.log("Failed");
+                 }
+             console.log("Reached Socket.on available");
+         });
+        
+        socket.on('ChangeLoc', function(res){
+            var redirect = function(){window.location = 'http://localhost/epl/eventkeeper/events/#/';};
+            console.log("Reached ChangeLoc")
+            redirect();
+        })
+
+        socket.on('LoginResp', function(res){
+             $time.html(res);
+
+                   //$('#timecheck').append($('<li>').text("Time is available"));
+                   console.log("Success");
+         });
+    </script>
+</body>
+
+</html>

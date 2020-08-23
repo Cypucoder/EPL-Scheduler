@@ -1,0 +1,60 @@
+<!-- x is the pointer for the sql return. Basically, whatever sql is used in the controller is what is returned. From there use {{x.(variable in database)}} to get data -->
+<div>
+    <h1><!--{{x.building}}--> Registered for {{title}}: ({{count}} Registered)</h1>
+    <!--{{cap}}-->
+        <table class="table table-striped">
+            <!--ng-repeat allows for autogeneration of tables -->
+            <tr><td><div class="col-xs-12">
+        <input type="input" ng-model="search" placeholder="search">
+        </div></td></tr>
+            
+            Going: {{tots(uno)}}
+        <tr ng-repeat="x in data|filter:search|filter:{regWait:'0'}|filter: x as uno"><!--<tr ng-repeat="x in data|filter:search| noWait:1">-->
+                <td><div class="media">
+                    <div class="media-left">
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading"><a ng-href="#event/{{x.regEvent}}/{{x.id_Registration}}/Attendee">More information</a></h4>
+                    <div class="container">
+                        <div class="col-sm-2 col-xs-12" text-left>First Name: {{x.regFName}}</div>
+                        <div class="col-sm-2 col-xs-12" text-left>Last Name: {{x.regLName}}</div>
+                        <div class="col-sm-2 col-xs-12" text-left>Phone: {{x.regPhone}}</div>
+                        <div class="col-sm-2 col-xs-12" text-left>Attending: {{x.regAttending}}</div>
+                        <div class="col-sm-2 col-xs-12" text-left><input type="submit" ng-click="updRemove(x.id_Registration);" ng-model="UpdReg.updRem" value="Remove" id="send"/></div>
+                    </div>
+                </div>
+                    </div></td>
+          <!--<td><div style="max-width: 200px; overflow: hidden"></div></td>
+            <td>{{x.title}}</td>
+            <td>{{x.eDescription}}</td>
+            <td></td>
+            <td><a ng-href="#ticket/{{x.idTicket}}">Temporary link</a></td>-->
+        </tr>
+    </table>
+        <table class="table table-striped">
+        <tr><td><h1>Waiting list</h1> On waiting list: {{tots(dos)}}</td></tr>    
+        <tr ng-repeat="x in data|filter:search|filter:{regWait:'1'}|filter: x as dos">
+                <td><div class="media">
+                    <div class="media-left">
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading"><a ng-href="#event/{{x.regEvent}}/{{x.id_Registration}}/Attendee">More information</a></h4>
+                    <div class="container">
+                        <div class="col-sm-2 col-xs-12" text-left>First Name: {{x.regFName}}</div>
+                        <div class="col-sm-2 col-xs-12" text-left>Last Name: {{x.regLName}}</div>
+                        <div class="col-sm-2 col-xs-12" text-left>Phone: {{x.regPhone}}</div>
+                        <div class="col-sm-2 col-xs-12" text-left>Attending: {{x.regAttending}}</div>
+                        <div class="col-sm-2 col-xs-12" text-left><input type="submit" ng-click="updWait(x.id_Registration);" ng-model="UpdReg.updSend" value="Move to event" id="send"/></div>
+                    </div>
+                </div>
+                    </div></td>
+          <!--<td><div style="max-width: 200px; overflow: hidden"></div></td>
+            <td>{{x.title}}</td>
+            <td>{{x.eDescription}}</td>
+            <td></td>
+            <td><a ng-href="#ticket/{{x.idTicket}}">Temporary link</a></td>-->
+        </tr>
+        </table>
+    
+    
+</div>

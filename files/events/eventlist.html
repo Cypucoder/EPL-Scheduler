@@ -1,0 +1,352 @@
+<!-- x is the pointer for the sql return. Basically, whatever sql is used in the controller is what is returned. From there use {{x.(variable in database)}} to get data -->
+<div class="col-md-2 hidden-xs hidden-sm"></div>
+<div class="col-md-8 col-xs-12">
+    <h1><!--{{x.building}}--> Events: {{user}}</h1>
+    <div class="container">
+    <div class="col-xs-12">
+        <input type="input" ng-model="search" placeholder="search">
+        </div>
+    <div class="col-xs-3" style="margin-top: 20px">
+        <select style="width: 170px;" class="form-control" id="Building" ng-model="EventFilt.fBuilding" ><!--ng-init="EventFilt.fBuilding=building"-->
+                    <option value="">--Building--</option><!--*-->
+                    <option value="Central">Central</option>
+                    <option value="West River">West River</option>
+                    <option value="North">North</option>
+                    <option value="South">South</option>
+                    <option value="Keystone">Keystone-Lagrange</option>
+                    <option value="Bookmobile">Bookmobile</option>
+                    <option value="">--None--</option><!--None-->                    
+                </select> </div>
+    <div class="col-xs-3" style="margin-top: 20px">
+        <select style="width: 170px;" class="form-control" id="Age" ng-model="EventFilt.fAge"><!-- ng-init="EventFilt.fAgeage"-->
+                    <option value="">--Age Group--</option><!--*-->
+                    <option value="QFX Kids">--Kids (all kids)--</option>
+                    <option value="QFX Kids Birth to Pre-K">Birth to Pre-K</option>
+                    <option value="QFX Kids School Age">School Age</option>
+                    <option value="QFX Family">Family</option>
+                    <option value="QFX Teens">--Teens--</option>
+                    <option value="QFX Adults">--Adults--</option>
+                    <option value="">--None--</option><!--None-->                   
+                </select></div>
+    <div class="col-xs-3" style="margin-top: 20px">
+        <select style="width: 170px;" class="form-control" id="Order" ng-model="EventFilt.fOrder" ng-init="EventFilt.fOrder = 'prepStart'"><!-- ng-init="EventFilt.fOrder=order"-->
+                    <option value="prepStart">--Order By--</option><!--*-->
+                    <option value="-prepStart">Newest to Oldest</option>
+                    <!--<option value="prepStart">Oldest to Newest</option>-->
+                    <option value="title">Event A-Z</option>
+                    <option value="-title">Event Z-A</option>
+                    <option value="ContName">Contact A-Z</option>
+                    <option value="-ContName">Contact Z-A</option>
+                    <option value="-id">Recent Submissions</option>
+                    <option value="id">Old Submissions</option>
+                    <!--<option value="">--None--</option>--><!--None-->                   
+                </select>
+        </div>
+        <div class="col-xs-3" style="margin-top: 20px">
+        <select style="width: 170px;" class="form-control" id="Order" ng-model="dateRange" ng-change="fCurrent()"><!-- ng-init="EventFilt.fOrder=order"-->
+            <!--<option value="prepStart">Current</option>
+            <option value="-prepStart">Past</option>     -->
+            <option ng-repeat="opt in PasPres">{{opt.Name}}</option>
+        </select>
+        </div>
+        <div class="col-xs-3">
+        <!--<a href="#/{{EventFilt.fBuilding}}/{{EventFilt.fAge}}/{{EventFilt.fOrder}}/filt" class="btn btn-info btn-default" role="button">Refine List</a>--></div>
+</div>
+    <div ng-if="Show1 && Show8 !='1'">
+        <table class="table table-striped" style="outline: 1px solid black; margin-top: 20px;">
+            <!--ng-repeat allows for autogeneration of tables -->
+        <tr ng-repeat="x in data | filter:search | filter:EventFilt.fBuilding | filter:EventFilt.fAge | orderBy:EventFilt.fOrder | filter:{CheckLy:'1'} | filter:{CheckJ:'1'} | filter:{CheckLak:'1'}">
+                <td><div class="media">
+                    <div class="media-left">
+                    <!--<a><img class="media-object" />(Image)</a>-->
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading"><div ng-if="x.Deleter == 1">*Canceled* </div><div ng-if="x.Placeholder == 1">*Placeholder* </div> {{x.title}}: <a ng-if="x.Editor == user || Ad == 'true'" ng-href="http://localhost/epl/eventkeeper/adschedule.html#/?id={{x.id}}">Update</a></h4>
+                    
+                    <div ng-if="Show6" class="checkbox-inline disabled">
+                  <label><input type="checkbox" ng-model="x.CheckLy" ng-true-value="1" ng-false-value="0" value="" disabled>Director</label>
+                </div>
+                
+                <div ng-if="Show6" class="checkbox-inline disabled">
+                  <label><input type="checkbox" ng-model="x.CheckLak" ng-true-value="1" ng-false-value="0" value="" disabled>Administrative Assistant</label>
+                </div>
+                    
+                <div ng-if="Show6" class="checkbox-inline disabled">
+                  <label><input type="checkbox" ng-model="x.CheckJ" ng-true-value="1" ng-false-value="0" value="" disabled>PR</label>
+                </div>    
+                    
+                    <!--<div class="container">-->
+                        <div class="col-sm-3 col-xs-12" text-left>Building: {{x.Building}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>Start: {{x.fstart}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>End: {{x.fend}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>Registered: {{x.AttendCount}}</div>
+                    <!--</div>-->
+                    <p>{{ x.eDescription | words:10 }}<a ng-href="#event/{{x.id}}"> Read More</a></p>
+                </div>
+                    </div></td>
+        </tr>
+        </table>
+    </div>
+    
+    <div ng-if="Show1 && Show8">
+        <table class="table table-striped" style="outline: 1px solid black; margin-top: 20px;">
+            <!--ng-repeat allows for autogeneration of tables -->
+        <tr ng-repeat="x in data | filter:search | filter:EventFilt.fBuilding | filter:EventFilt.fAge | orderBy:EventFilt.fOrder">
+                <td><div class="media">
+                    <div class="media-left">
+                    <!--<a><img class="media-object" />(Image)</a>-->
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading"><div ng-if="x.Deleter == 1">*Canceled* </div><div ng-if="x.Placeholder == 1">*Placeholder* </div> {{x.title}}: <a ng-if="x.Editor == user || Ad == 'true'" ng-href="http://localhost/epl/eventkeeper/adschedule.html#/?id={{x.id}}">Update</a></h4>
+                    
+                    <div ng-if="Show6" class="checkbox-inline disabled">
+                  <label><input type="checkbox" ng-model="x.CheckLy" ng-true-value="1" ng-false-value="0" value="" disabled>Director</label>
+                </div>
+                
+                <div ng-if="Show6" class="checkbox-inline disabled">
+                  <label><input type="checkbox" ng-model="x.CheckLak" ng-true-value="1" ng-false-value="0" value="" disabled>Administrative Assistant</label>
+                </div>
+                    
+                <div ng-if="Show6" class="checkbox-inline disabled">
+                  <label><input type="checkbox" ng-model="x.CheckJ" ng-true-value="1" ng-false-value="0" value="" disabled>PR</label>
+                </div>
+                    <!--<div class="container">-->
+                        <div class="col-sm-3 col-xs-12" text-left>Building: {{x.Building}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>Start: {{x.fstart}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>End: {{x.fend}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>Registered: {{x.AttendCount}}</div>
+                    <!--</div>-->
+                    <p>{{ x.eDescription | words:10 }}<a ng-href="#event/{{x.id}}"> Read More</a></p>
+                </div>
+                    </div></td>
+        </tr>
+        </table>
+    </div>
+    
+    <div ng-if="Show2">
+        <h1>New Events</h1>
+        <table class="table table-striped" style="outline: 1px solid black; margin-top: 20px;">
+            <!--ng-repeat allows for autogeneration of tables -->
+        <tr ng-repeat="x in data|filter:search|filter:{CheckLy:'0'}|filter:EventFilt.fBuilding|filter:EventFilt.fAge|orderBy:EventFilt.fOrder">
+                <td><div class="media">
+                    <div class="media-left">
+                    <!--<a><img class="media-object" />(Image)</a>-->
+                </div>
+                <div class="media-body">
+                    <div><h4 class="media-heading"><div ng-if="x.Deleter == 1">*Canceled* </div><div ng-if="x.Placeholder == 1">*Placeholder* </div> {{x.title}}: <a ng-if="x.Editor == user || Ad == 'true'" ng-href="http://localhost/epl/eventkeeper/adschedule.html#/?id={{x.id}}">Update</a></h4>
+                    
+                    
+<div class="checkbox-inline disabled">
+                  <label><input type="checkbox" ng-model="x.CheckLy" ng-true-value="1" ng-false-value="0" value="" disabled>Director</label>
+                </div>
+                
+                <div class="checkbox-inline disabled">
+                  <label><input type="checkbox" ng-model="x.CheckLak" ng-true-value="1" ng-false-value="0" value="" disabled>Administrative Assistant</label>
+                </div>
+                
+                <div class="checkbox-inline disabled">
+                  <label><input type="checkbox" ng-model="x.CheckJ" ng-true-value="1" ng-false-value="0" value="" disabled>PR</label>
+                </div>        
+                    </div>
+            
+                    <!--<div class="container">-->
+                        <div class="col-sm-3 col-xs-12" text-left>Building: {{x.Building}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>Start: {{x.fstart}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>End: {{x.fend}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>Registered: {{x.AttendCount}}</div>
+                    <!--</div>-->
+                    <p>{{ x.eDescription | words:10 }}<a ng-href="#event/{{x.id}}"> Read More</a></p>
+                </div>
+                    </div></td>
+        </tr>
+        </table>
+    
+    <h1>Approved Events</h1>
+        <table class="table table-striped" style="outline: 1px solid black; margin-top: 20px;">
+            <!--ng-repeat allows for autogeneration of tables -->
+        <tr ng-repeat="x in data|filter:search|filter:{CheckLy:'1'}|filter:EventFilt.fBuilding|filter:EventFilt.fAge|orderBy:EventFilt.fOrder">
+                <td><div class="media">
+                    <div class="media-left">
+                    <!--<a><img class="media-object" />(Image)</a>-->
+                </div>
+                <div class="media-body">
+                     <div><h4 class="media-heading"><div ng-if="x.Deleter == 1">*Canceled* </div><div ng-if="x.Placeholder == 1">*Placeholder* </div> {{x.title}}: <a ng-if="x.Editor == user || Ad == 'true'" ng-href="http://localhost/epl/eventkeeper/adschedule.html#/?id={{x.id}}">Update</a></h4>
+                    
+                    
+<div class="checkbox-inline disabled">
+                  <label><input type="checkbox" ng-model="x.CheckLy" ng-true-value="1" ng-false-value="0" value="" disabled>Director</label>
+                </div>
+                
+                <div class="checkbox-inline disabled">
+                  <label><input type="checkbox" ng-model="x.CheckLak" ng-true-value="1" ng-false-value="0" value="" disabled>Administrative Assistant</label>
+                </div>
+                
+                <div class="checkbox-inline disabled">
+                  <label><input type="checkbox" ng-model="x.CheckJ" ng-true-value="1" ng-false-value="0" value="" disabled>PR</label>
+                </div>         
+                    </div>
+                    
+                    <!--<div class="container">-->
+                        <div class="col-sm-3 col-xs-12" text-left>Building: {{x.Building}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>Start: {{x.fstart}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>End: {{x.fend}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>Registered: {{x.AttendCount}}</div>
+                    <!--</div>-->
+                    <p>{{ x.eDescription | words:10 }}<a ng-href="#event/{{x.id}}"> Read More</a></p>
+                </div>
+                    </div></td>
+        </tr>
+        </table>
+    </div>
+    
+    
+    <div ng-if="Show3" class="col-xs-12">
+        <h1>New Events</h1>
+        <table class="table table-striped" style="outline: 1px solid black; margin-top: 20px;">
+            <!--ng-repeat allows for autogeneration of tables -->
+        <tr ng-repeat="x in data|filter:search|filter:{CheckJ:'0'}|filter:EventFilt.fBuilding|filter:EventFilt.fAge|orderBy:EventFilt.fOrder">
+                <td><div class="media">
+                    <div class="media-left">
+                    <!--<a><img class="media-object" />(Image)</a>-->
+                </div>
+                <div class="media-body">
+                     <div><h4 class="media-heading"><div ng-if="x.Deleter == 1">*Canceled* </div><div ng-if="x.Placeholder == 1">*Placeholder* </div> {{x.title}}: <a ng-if="x.Editor == user || Ad == 'true'" ng-href="http://localhost/epl/eventkeeper/adschedule.html#/?id={{x.id}}">Update</a></h4>
+                    
+                    
+<div class="checkbox-inline disabled">
+                  <label><input type="checkbox" ng-model="x.CheckLy" ng-true-value="1" ng-false-value="0" value="" disabled>Director</label>
+                </div>
+                
+                <div class="checkbox-inline disabled">
+                  <label><input type="checkbox" ng-model="x.CheckLak" ng-true-value="1" ng-false-value="0" value="" disabled>Administrative Assistant</label>
+                </div>
+                
+                <div class="checkbox-inline disabled">
+                  <label><input type="checkbox" ng-model="x.CheckJ" ng-true-value="1" ng-false-value="0" value="" disabled>PR</label>
+                </div>         
+                    </div>
+                    <!--<div class="container">-->
+                        <div class="col-sm-3 col-xs-12" text-left>Building: {{x.Building}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>Start: {{x.fstart}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>End: {{x.fend}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>Registered: {{x.AttendCount}}</div>
+                    <!--</div>-->
+                    <p>{{ x.eDescription | words:10 }}<a ng-href="#event/{{x.id}}"> Read More</a></p>
+                </div>
+                    </div></td>
+        </tr>
+        </table>
+    
+    <h1>Checked Events</h1>
+        <table class="table table-striped" style="outline: 1px solid black; margin-top: 20px;">
+            <!--ng-repeat allows for autogeneration of tables -->
+        <tr ng-repeat="x in data|filter:search|filter:{CheckJ:'1'}|filter:EventFilt.fBuilding|filter:EventFilt.fAge|orderBy:EventFilt.fOrder">
+                <td><div class="media">
+                    <div class="media-left">
+                    <!--<a><img class="media-object" />(Image)</a>-->
+                </div>
+                <div class="media-body">
+                     <div><h4 class="media-heading"><div ng-if="x.Deleter == 1">*Canceled* </div><div ng-if="x.Placeholder == 1">*Placeholder* </div> {{x.title}}: <a ng-if="x.Editor == user || Ad == 'true'" ng-href="http://localhost/epl/eventkeeper/adschedule.html#/?id={{x.id}}">Update</a></h4>
+                    
+                    
+<div class="checkbox-inline disabled">
+                  <label><input type="checkbox" ng-model="x.CheckLy" ng-true-value="1" ng-false-value="0" value="" disabled>Director</label>
+                </div>
+                
+                <div class="checkbox-inline disabled">
+                  <label><input type="checkbox" ng-model="x.CheckLak" ng-true-value="1" ng-false-value="0" value="" disabled>Administrative Assistant</label>
+                </div>
+                
+                <div class="checkbox-inline disabled">
+                  <label><input type="checkbox" ng-model="x.CheckJ" ng-true-value="1" ng-false-value="0" value="" disabled>PR</label>
+                </div>         
+                    </div>
+                    <!--<div class="container">-->
+                        <div class="col-sm-3 col-xs-12" text-left>Building: {{x.Building}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>Start: {{x.fstart}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>End: {{x.fend}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>Registered: {{x.AttendCount}}</div>
+                    <!--</div>-->
+                    <p>{{ x.eDescription | words:10 }}<a ng-href="#event/{{x.id}}"> Read More</a></p>
+                </div>
+                    </div></td>
+        </tr>
+        </table>
+    </div>
+    
+    
+    <div ng-if="Show4">
+        <h1>New Events</h1>
+        <table class="table table-striped" style="outline: 1px solid black; margin-top: 20px;">
+            <!--ng-repeat allows for autogeneration of tables -->
+        <tr ng-repeat="x in data|filter:search|filter:{CheckLak:'0'}|filter:EventFilt.fBuilding|filter:EventFilt.fAge|orderBy:EventFilt.fOrder">
+                <td><div class="media">
+                    <div class="media-left">
+                    <!--<a><img class="media-object" />(Image)</a>-->
+                </div>
+                <div class="media-body">
+                     <div><h4 class="media-heading"><div ng-if="x.Deleter == 1">*Canceled* </div><div ng-if="x.Placeholder == 1">*Placeholder* </div> {{x.title}}: <a ng-if="x.Editor == user || Ad == 'true'" ng-href="http://localhost/epl/eventkeeper/adschedule.html#/?id={{x.id}}">Update</a></h4>
+                    
+                    
+<div class="checkbox-inline disabled">
+                  <label><input type="checkbox" ng-model="x.CheckLy" ng-true-value="1" ng-false-value="0" value="" disabled>Director</label>
+                </div>
+                
+                <div class="checkbox-inline disabled">
+                  <label><input type="checkbox" ng-model="x.CheckLak" ng-true-value="1" ng-false-value="0" value="" disabled>Administrative Assistant</label>
+                </div>
+                
+                <div class="checkbox-inline disabled">
+                  <label><input type="checkbox" ng-model="x.CheckJ" ng-true-value="1" ng-false-value="0" value="" disabled>PR</label>
+                </div>         
+                    </div>
+                    <!--<div class="container">-->
+                        <div class="col-sm-3 col-xs-12" text-left>Building: {{x.Building}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>Start: {{x.fstart}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>End: {{x.fend}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>Registered: {{x.AttendCount}}</div>
+                    <!--</div>-->
+                    <p>{{ x.eDescription | words:10 }}<a ng-href="#event/{{x.id}}"> Read More</a></p>
+                </div>
+                    </div></td>
+        </tr>
+        </table>
+    
+    <h1>Checked Events</h1>
+        <table class="table table-striped" style="outline: 1px solid black; margin-top: 20px;">
+            <!--ng-repeat allows for autogeneration of tables -->
+        <tr ng-repeat="x in data|filter:search|filter:{CheckLak:'1'}|filter:EventFilt.fBuilding|filter:EventFilt.fAge|orderBy:EventFilt.fOrder">
+                <td><div class="media">
+                    <div class="media-left">
+                    <!--<a><img class="media-object" />(Image)</a>-->
+                </div>
+                <div class="media-body">
+                     <div><h4 class="media-heading"><div ng-if="x.Deleter == 1">*Canceled* </div><div ng-if="x.Placeholder == 1">*Placeholder* </div> {{x.title}}: <a ng-if="x.Editor == user || Ad == 'true'" ng-href="http://localhost/epl/eventkeeper/adschedule.html#/?id={{x.id}}">Update</a></h4>
+                    
+                    
+<div class="checkbox-inline disabled">
+                  <label><input type="checkbox" ng-model="x.CheckLy" ng-true-value="1" ng-false-value="0" value="" disabled>Director</label>
+                </div>
+                
+                <div class="checkbox-inline disabled">
+                  <label><input type="checkbox" ng-model="x.CheckLak" ng-true-value="1" ng-false-value="0" value="" disabled>Administrative Assistant</label>
+                </div>
+                
+                <div class="checkbox-inline disabled">
+                  <label><input type="checkbox" ng-model="x.CheckJ" ng-true-value="1" ng-false-value="0" value="" disabled>PR</label>
+                </div>         
+                    </div>
+                    
+                    <!--<div class="container">-->
+                        <div class="col-sm-3 col-xs-12" text-left>Building: {{x.Building}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>Start: {{x.fstart}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>End: {{x.fend}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>Registered: {{x.AttendCount}}</div>
+                    <!--</div>-->
+                    <p>{{ x.eDescription | words:10 }}<a ng-href="#event/{{x.id}}"> Read More</a></p>
+                </div>
+                    </div></td>
+        </tr>
+        </table>
+    </div>
+</div>

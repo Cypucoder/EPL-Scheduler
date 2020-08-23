@@ -1,0 +1,33 @@
+<div>
+    
+    <div ng-controller="data_event">        
+        <div class="col-md-6">      
+<table class="table table-striped">
+        <tr>
+            <td><h1>{{x.title}}</h1></td><td></td>
+        </tr>
+        <tr>
+            <td><a href="#event/{{x.id}}/Registration/">Click here to register</a></td><td></td>
+        </tr>
+        <tr>
+            <td>Contact Name: {{x.ContName}}</td><td>Contact Mail: {{x.ContMail}}</td>
+        </tr>
+        <tr>
+            <td>Contact Phone: 555-555-5555 </td><td>Max Attendance: 50 people</td>
+        </tr>
+        <tr>
+            <td>Start time: {{x.start}}</td><td>End time: {{x.end}}</td>
+        </tr> 
+        <tr>
+            <td>Room/Location: </td><td>{{x.Location_Room}}</td>
+        </tr>
+        <tr>
+            <td>All Day?: </td><td>{{x.allDay}}</td>
+        </tr>
+        <tr>
+            <td>Description: </td><td>{{x.eDescription}}</td>
+        </tr>
+        
+        </table>
+      </div>
+    </div>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <!--
+    ~Change this style sheet to change the look of the site. The current theme is darkly. 
+    ~Look up Bootstrap Themes on google or go to "http://getbootstrap.com/customize/" to create your own
+    -->
+    <link rel="stylesheet" href="./css/IT.css">
+    
+    <!-- needed files for using angular, html5, jquery, and bootstrap-->
+    <!-- * Info on the tools used: 
+            ~ Angular is used to display data from the database. Instead of typing in a full sql query whenever we need something, we can type in smaller things like Users.name to return data. 
+            ~ Bootstrap is a css generator... thing... Basically it makes everything look nice with little effort. 
+            ~ app.js points to the angular application used to return data
+-->
+    
+    <!--The following is needed for angular data return compatibility between all browsers. Even though some of it is commented out, it's actually being read by IE or another browser. -->
+    
+    <!--[if (IE)]><script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.29/angular.min.js"></script>
+                  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.29/angular-cookies.js"></script>
+<![endif]-->
+    
+    <!--[if !(IE)]><!-->  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-cookies.js"></script>
+<!--<![endif]-->
+    
+<!--http://stackoverflow.com/questions/9900311/how-do-i-target-only-internet-explorer-10-for-certain-situations-like-internet-e -->    
+   <script>
+    /*@cc_on
+      @if (@_jscript_version == 10)
+          document.write('<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.29/angular.min.js"/>''<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.29/angular-cookies.js">');
+      @end
+    @*/
+</script>
+    
+    <!-- Needed for html compatibility -->
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    
+    <!--JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    
+    <!--Bootstrap is needed as a simple css solution -->
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    
+</head>
+<body>
+ 
+<div ng-app="myApp" ng-controller="customersCtrl">
+ 
+<table>
+  <tr ng-repeat="x in names">
+    <td>{{ x.Name }}</td>
+    <td>{{ x.Country }}</td>
+  </tr>
+</table>
+
+
+
+<h1><!--{{x.building}}--> Events: {{user}}</h1>
+    <div class="container">
+    <div class="col-xs-12">
+        <input type="input" ng-model="search" placeholder="search">
+        </div>
+    <div class="col-xs-3">
+        <select style="width: 170px;" class="form-control" id="Building" ng-model="EventFilt.fBuilding" ng-init="EventFilt.fBuilding=building">
+                    <option value="*">--Building--</option>
+                    <option value="Central">Central</option>
+                    <option value="West River">West River</option>
+                    <option value="North">North</option>
+                    <option value="South">South</option>
+                    <option value="Keystone">Keystone-Lagrange</option>
+                    <option value="Bookmobile">Bookmobile</option>
+                    <option value="None">--None--</option>                    
+                </select> </div>
+    <div class="col-xs-3">
+        <select style="width: 170px;" class="form-control" id="Age" ng-model="EventFilt.fAge" ng-init="EventFilt.fAge=age">
+                    <option value="*">--Age Group--</option>
+                    <option value="Kids">--Kids (all kids)--</option>
+                    <option value="Birth to Pre-K">Birth to Pre-K</option>
+                    <option value="School Age">School Age</option>
+                    <option value="Family">Family</option>
+                    <option value="Teens">--Teens--</option>
+                    <option value="Adults">--Adults--</option>
+                    <option value="None">--None--</option>                   
+                </select></div>
+    <div class="col-xs-3">
+        <select style="width: 170px;" class="form-control" id="Order" ng-model="EventFilt.fOrder" ng-init="EventFilt.fOrder=order">
+                    <option value="*">--Order By--</option>
+                    <option value="prepStart DESC">Newest to Oldest</option>
+                    <option value="prepStart">Oldest to Newest</option>
+                    <option value="title">Event A-Z</option>
+                    <option value="title DESC">Event Z-A</option>
+                    <option value="ContName">Contact A-Z</option>
+                    <option value="ContName DESC">Contact Z-A</option>
+                    <option value="events.id DESC">Recent Submissions</option>
+                    <option value="id">Old Submissions</option>
+                    <option value="None">--None--</option>                   
+                </select></div>
+        <div class="col-xs-3">
+        <a href="#/{{EventFilt.fBuilding}}/{{EventFilt.fAge}}/{{EventFilt.fOrder}}/filt" class="btn btn-info btn-default" role="button">Refine List</a></div>
+</div>
+    
+    </div>
+ 
+<script>
+var app = angular.module('myApp', []);
+app.controller('customersCtrl', function($scope, $http) {
+   $http.get("http://elyrialibrary.org/wai/Angularphptest.php")
+   .then(function (response) {$scope.names = response.data.records;});
+});
+</script>
+ 
+</body>
+</html>

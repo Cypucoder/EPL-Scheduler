@@ -1,0 +1,40 @@
+<div>
+        
+        <div class="col-md-6">
+             <ng-form id="Regis" name="Regis" action="" novalidate>
+                 <input type="hidden" ng-model="Regis.regEvent" value="{{x.title}}" ng-init="Regis.regEvent=fTicketId"/>
+<table class="table table-striped">
+        <tr>
+            <td><h1>Register for {{x.title}}</h1></td><td></td>
+        </tr>
+        <tr>
+            <td>First Name: <input type="text" ng-model="Regis.regFName" id="regFName" name="FName" required ></td><td>Last Name: <input type="text" ng-model="Regis.regLName" id="regLName" name="LName" required ></td>
+        </tr>
+        <tr>
+            <td>Contact Phone: <input type="tel" ng-model="Regis.regPhone" id="regPhone" name="Phone" required > </td><td>Contact Mail: <input type="email" ng-model="Regis.regEmail" id="regEmail" name="Email" required ></td>
+        </tr>
+        <tr>
+            <td>How Many Are Attending? <input type="number" ng-model="Regis.regAttending" id="regAttending" name="Attending" required > </td><td></td>
+        </tr>
+        <tr>
+            <td>Where did you hear about this event? </td><td><select style="width: 170px;" class="form-control" id="regHearAbout" ng-model="Regis.regHearAbout">
+                    <option value="">--Optional--</option>
+                    <option value="Family or Friend">Family or Friend</option>
+                    <option value="Indoor library display and/or flyer">Indoor library display and/or flyer</option>
+                    <option value="Library staff">Library staff</option>
+                    <option value="Library Website">Library Website</option>
+                    <option value="Social Media">Social Media</option>
+                    <option value="Newspaper">Newspaper</option>
+                    <option value="Outdoor sign">Outdoor sign</option>
+                    <option value="School flyer">School flyer</option>
+                    <option value="Other">Other</option>                    
+                </select></td>
+        </tr>
+        <tr>
+            <td><input type="submit" ng-click="addRegis(Regis);" ng-model="Regis.RegisSend" id="send"/></td><td></td>
+            </tr>
+        </table>
+    </ng-form>
+      </div>
+
+</div>

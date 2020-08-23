@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Period Picker Demo</title>
+	<link rel="stylesheet" href="jquery.periodpicker.css">
+	<link rel="stylesheet" href="jquery.timepicker.css">
+	<script src="moment.js"></script>
+	<script src="jquery.min.js"></script>
+	<script src="jquery.mousewheel.min.js"></script>
+	<script src="jquery.periodpicker.min.js"></script>
+	<script src="jquery.timepicker.js"></script>
+</head>
+<body>
+	<input type="text" value="2012/12/12" id="periodpickerstart"/>
+	<input type="text" value="2013/12/12" id="periodpickerend"/>
+	<script>
+	jQuery('#periodpickerstart').periodpicker({
+		norange: true, // use only one value
+	cells: [1, 1], // show only one month
+
+	resizeButton: false, // deny resize picker
+	fullsizeButton: false,
+	fullsizeOnDblClick: false,
+
+	timepicker: true, // use timepicker
+	timepickerOptions: {
+		hours: true,
+		minutes: true,
+		seconds: false,
+		ampm: true
+	},
+        end: '#periodpickerend'
+	});
+	//$('#periodpickerstart').periodpicker('value', ['12.03.2010','15.03.2010']);
+	//$('#periodpickerstart').periodpicker('clear');
+	window.onerror = function (m){
+	alert(m)
+	}
+	</script>
+	<p>
+		<a href="http://xdsoft.net/jqplugins/periodpicker/">Documentation</a>
+	</p>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<html>
+<header>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="http://vitalets.github.io/combodate/combodate.js"></script>
+</header>
+<body>
+    <form>
+        <input type="text" id="date" data-format="DD-MM-YYYY" data-template="D MMM YYYY" name="date" value="09-01-2013"><br>
+        <input type="text" id="datetime12" data-format="DD-MM-YYYY h:mm a" data-template="DD / MM / YYYY     hh : mm a" name="datetime" value="21-12-2012 8:30 pm">
+    </form>
+</body>
+    <script>
+$(function(){
+    $('#date').combodate();    
+});
+
+$(function(){
+    $('#datetime12').combodate();  
+});
+</script>
+</html>

@@ -1,0 +1,409 @@
+<div id="left" class="col-xs-3"></div>
+<div class="col-md-6">
+    
+    <table class="table table-striped">
+            <!--ng-repeat allows for autogeneration of tables -->
+        <tr style="display:none"><td></td></tr>
+        <tr><td class="MSTitle">Sunday {{Sun| date:'MMM d'}}</td></tr>
+        <tr class="MS">
+            <!--<td class="MS col-xs-1">
+                Date
+            </td>-->
+            <td class="MS col-xs-3">
+                Title
+            </td>
+            <td class="MS col-xs-1">
+                Time
+            </td>
+            <td class="MS col-xs-1">
+               <!-- {{x.end | date:'shortTime'}}-->
+            </td>
+            <td class="MS col-xs-2">
+                Room/Building
+            </td>
+            <td class="MS col-xs-1">
+                # of Chairs
+            </td>
+            <td class="MS col-xs-2">
+                Setup Type
+            </td>
+            <td class="MS col-xs-2">
+                Assigned to
+            </td>
+        </tr>
+        <tr class="MS" ng-repeat="x in data | filter: x.dayFilt='QXSun'">
+            <!--<td class="MS col-xs-1">
+                {{x.start| date:'MM/dd'}}
+            </td>-->
+            <td class="MS col-xs-1">
+                {{x.title}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.start | date:'shortTime'}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.end | date:'shortTime'}}
+            </td>
+            <td class="MS col-xs-1">
+                ({{x.eBuilding}}) {{x.RoomName}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.Chairs}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.Location_Room}}
+            </td>
+            <td class="MS col-xs-1">
+                <input type="text" style="border:none"/>
+            </td>
+        </tr>
+        </table>
+    
+    <table class="table table-striped">
+            <!--ng-repeat allows for autogeneration of tables -->
+        <tr style="display:none"><td></td></tr>
+        <tr><td class="MSTitle">Monday {{Mon | date:'MMM d'}}</td></tr>
+        <tr class="MS">
+            <!--<td class="MS col-xs-1">
+                Date
+            </td>-->
+            <td class="MS col-xs-3">
+                Title
+            </td>
+            <td class="MS col-xs-1">
+                Time
+            </td>
+            <td class="MS col-xs-1">
+               <!-- {{x.end | date:'shortTime'}}-->
+            </td>
+            <td class="MS col-xs-2">
+                Room/Building
+            </td>
+            <td class="MS col-xs-1">
+                # of Chairs
+            </td>
+            <td class="MS col-xs-2">
+                Setup Type
+            </td>
+            <td class="MS col-xs-2">
+                Assigned to
+            </td>
+        </tr>
+        <tr class="MS" ng-repeat="x in data | filter: x.dayFilt='QXMon'">
+            <!--<td class="MS col-xs-1">
+                {{x.start| date:'MM/dd'}}
+            </td>-->
+            <td class="MS col-xs-1">
+                {{x.title}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.start | date:'shortTime'}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.end | date:'shortTime'}}
+            </td>
+            <td class="MS col-xs-1">
+                ({{x.eBuilding}}) {{x.RoomName}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.Chairs}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.Location_Room}}
+            </td>
+            <td class="MS col-xs-1">
+                <input type="text" style="border:none"/>
+            </td>
+        </tr>
+        </table>
+    
+    <table class="table table-striped">
+            <!--ng-repeat allows for autogeneration of tables -->
+        <tr style="display:none"><td></td></tr>
+        <tr><td class="MSTitle">Tuesday {{Tue | date:'MMM d'}}</td></tr>
+        <tr class="MS">
+            <!--<td class="MS col-xs-1">
+                Date
+            </td>-->
+            <td class="MS col-xs-3">
+                Title
+            </td>
+            <td class="MS col-xs-1">
+                Time
+            </td>
+            <td class="MS col-xs-1">
+               <!-- {{x.end | date:'shortTime'}}-->
+            </td>
+            <td class="MS col-xs-2">
+                Room/Building
+            </td>
+            <td class="MS col-xs-1">
+                # of Chairs
+            </td>
+            <td class="MS col-xs-2">
+                Setup Type
+            </td>
+            <td class="MS col-xs-2">
+                Assigned to
+            </td>
+        </tr>
+        <tr class="MS" ng-repeat="x in data | filter: x.dayFilt='QXTue'">
+            <!--<td class="MS col-xs-1">
+                {{x.start| date:'MM/dd'}}
+            </td>-->
+            <td class="MS col-xs-1">
+                {{x.title}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.start | date:'shortTime'}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.end | date:'shortTime'}}
+            </td>
+            <td class="MS col-xs-1">
+                ({{x.eBuilding}}) {{x.RoomName}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.Chairs}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.Location_Room}}
+            </td>
+            <td class="MS col-xs-1">
+                <input type="text" style="border:none"/>
+            </td>
+        </tr>
+        </table>
+    
+    <table class="table table-striped">
+            <!--ng-repeat allows for autogeneration of tables -->
+        <tr style="display:none"><td></td></tr>
+        <tr><td class="MSTitle">Wednesday {{Wed | date:'MMM d'}}</td></tr>
+        <tr class="MS">
+            <!--<td class="MS col-xs-1">
+                Date
+            </td>-->
+            <td class="MS col-xs-3">
+                Title
+            </td>
+            <td class="MS col-xs-1">
+                Time
+            </td>
+            <td class="MS col-xs-1">
+               <!-- {{x.end | date:'shortTime'}}-->
+            </td>
+            <td class="MS col-xs-2">
+                Room/Building
+            </td>
+            <td class="MS col-xs-1">
+                # of Chairs
+            </td>
+            <td class="MS col-xs-2">
+                Setup Type
+            </td>
+            <td class="MS col-xs-2">
+                Assigned to
+            </td>
+        </tr>
+        <tr class="MS" ng-repeat="x in data | filter: x.dayFilt='QXWed'">
+            <!--<td class="MS col-xs-1">
+                {{x.start| date:'MM/dd'}}
+            </td>-->
+            <td class="MS col-xs-1">
+                {{x.title}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.start | date:'shortTime'}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.end | date:'shortTime'}}
+            </td>
+            <td class="MS col-xs-1">
+                ({{x.eBuilding}}) {{x.RoomName}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.Chairs}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.Location_Room}}
+            </td>
+            <td class="MS col-xs-1">
+                <input type="text" style="border:none"/>
+            </td>
+        </tr>
+        </table>
+    
+    <table class="table table-striped">
+            <!--ng-repeat allows for autogeneration of tables -->
+        <tr style="display:none"><td></td></tr>
+        <tr><td class="MSTitle">Thurday {{Thu | date:'MMM d'}}</td></tr>
+        <tr class="MS">
+            <!--<td class="MS col-xs-1">
+                Date
+            </td>-->
+            <td class="MS col-xs-3">
+                Title
+            </td>
+            <td class="MS col-xs-1">
+                Time
+            </td>
+            <td class="MS col-xs-1">
+               <!-- {{x.end | date:'shortTime'}}-->
+            </td>
+            <td class="MS col-xs-2">
+                Room/Building
+            </td>
+            <td class="MS col-xs-1">
+                # of Chairs
+            </td>
+            <td class="MS col-xs-2">
+                Setup Type
+            </td>
+            <td class="MS col-xs-2">
+                Assigned to
+            </td>
+        </tr>
+        <tr class="MS" ng-repeat="x in data | filter: x.dayFilt='QXThu'">
+            <!--<td class="MS col-xs-1">
+                {{x.start| date:'MM/dd'}}
+            </td>-->
+            <td class="MS col-xs-1">
+                {{x.title}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.start | date:'shortTime'}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.end | date:'shortTime'}}
+            </td>
+            <td class="MS col-xs-1">
+                ({{x.eBuilding}}) {{x.RoomName}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.Chairs}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.Location_Room}}
+            </td>
+            <td class="MS col-xs-1">
+                <input type="text" style="border:none"/>
+            </td>
+        </tr>
+        </table>
+    
+    <table class="table table-striped">
+            <!--ng-repeat allows for autogeneration of tables -->
+        <tr style="display:none"><td></td></tr>
+        <tr><td class="MSTitle">Friday {{Fri | date:'MMM d'}}</td></tr>
+        <tr class="MS">
+            <!--<td class="MS col-xs-1">
+                Date
+            </td>-->
+            <td class="MS col-xs-3">
+                Title
+            </td>
+            <td class="MS col-xs-1">
+                Time
+            </td>
+            <td class="MS col-xs-1">
+               <!-- {{x.end | date:'shortTime'}}-->
+            </td>
+            <td class="MS col-xs-2">
+                Room/Building
+            </td>
+            <td class="MS col-xs-1">
+                # of Chairs
+            </td>
+            <td class="MS col-xs-2">
+                Setup Type
+            </td>
+            <td class="MS col-xs-2">
+                Assigned to
+            </td>
+        </tr>
+        <tr class="MS" ng-repeat="x in data | filter: x.dayFilt='QXFri'">
+            <!--<td class="MS col-xs-1">
+                {{x.start| date:'MM/dd'}}
+            </td>-->
+            <td class="MS col-xs-1">
+                {{x.title}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.start | date:'shortTime'}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.end | date:'shortTime'}}
+            </td>
+            <td class="MS col-xs-1">
+                ({{x.eBuilding}}) {{x.RoomName}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.Chairs}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.Location_Room}}
+            </td>
+            <td class="MS col-xs-1">
+                <input type="text" style="border:none"/>
+            </td>
+        </tr>
+        </table>
+    
+    <table class="table table-striped">
+            <!--ng-repeat allows for autogeneration of tables -->
+        <tr style="display:none"><td></td></tr>
+        <tr><td class="MSTitle">Saturday {{Sat | date:'MMM d'}}</td></tr>
+        <tr class="MS">
+            <!--<td class="MS col-xs-1">
+                Date
+            </td>-->
+            <td class="MS col-xs-3">
+                Title
+            </td>
+            <td class="MS col-xs-1">
+                Time
+            </td>
+            <td class="MS col-xs-1">
+               <!-- {{x.end | date:'shortTime'}}-->
+            </td>
+            <td class="MS col-xs-2">
+                Room/Building
+            </td>
+            <td class="MS col-xs-1">
+                # of Chairs
+            </td>
+            <td class="MS col-xs-2">
+                Setup Type
+            </td>
+            <td class="MS col-xs-2">
+                Assigned to
+            </td>
+        </tr>
+        <tr class="MS" ng-repeat="x in data | filter: x.dayFilt='QXSat'">
+            <!--<td class="MS col-xs-1">
+                {{x.start| date:'MM/dd'}}
+            </td>-->
+            <td class="MS col-xs-1">
+                {{x.title}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.start | date:'shortTime'}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.end | date:'shortTime'}}
+            </td>
+            <td class="MS col-xs-1">
+                ({{x.eBuilding}}) {{x.RoomName}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.Chairs}}
+            </td>
+            <td class="MS col-xs-1">
+                {{x.Location_Room}}
+            </td>
+            <td class="MS col-xs-1">
+                <input type="text" style="border:none"/>
+            </td>
+        </tr>
+        </table>
+</div>

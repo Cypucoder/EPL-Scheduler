@@ -1,0 +1,15 @@
+<div class="col-md-4 hidden-xs hidden-sm"></div>
+<div class="col-md-8 col-xs-12">
+    <h1>{{Message}}</h1><h5 ng-if="Show3" class="col-xs-5">You'll be redirected in {{counter}} seconds</h5>
+
+    <div ng-if="Show4">
+        <div class="col-sm-12"><b>Title:</b> {{Title}}</div>
+        <div class="col-sm-12"><b>Email:</b> {{Mail}}</div>
+        <div class="col-sm-3"><b>Start:</b> {{Start}}</div>
+        <div class="col-sm-3"><b>End:</b> {{End}}</div>
+        <div class="col-sm-12"><b>Description:</b> {{Description}}</div>
+        <div class="col-sm-12" style="margin-bottom: 20px;"></div>
+    </div>
+    <div ng-if="Show1"><a href="http://localhost/epl/eventkeeper/schedule.html"><div class="col-sm-12">Add another event</div></a></div>
+    <div ng-if="Show2"><a href="http://localhost/epl/eventkeeper/schedule.html#/?rep=1"><div class="col-sm-12">Create a repeat event from previous</div></a></div>
+</div>

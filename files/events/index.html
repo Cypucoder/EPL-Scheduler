@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
+    <title></title>
+    <!--
+    ~Change this style sheet to change the look of the site. The current theme is darkly. 
+    ~Look up Bootstrap Themes on google or go to "http://getbootstrap.com/customize/" to create your own
+    -->
+    <link rel="stylesheet" href="./css/IT.css">
+    
+    <!-- needed files for using angular, html5, jquery, and bootstrap-->
+    <!-- * Info on the tools used: 
+            ~ Angular is used to display data from the database. Instead of typing in a full sql query whenever we need something, we can type in smaller things like Users.name to return data. 
+            ~ Bootstrap is a css generator... thing... Basically it makes everything look nice with little effort. 
+            ~ app.js points to the angular application used to return data
+-->
+    
+    <!--The following is needed for angular data return compatibility between all browsers. Even though some of it is commented out, it's actually being read by IE or another browser. -->
+    
+    <!--[if (IE)]><script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.29/angular.min.js"></script>
+                  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.29/angular-cookies.js"></script>
+<![endif]-->
+    
+    <!--[if !(IE)]><!-->  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-cookies.js"></script>
+<!--<![endif]-->
+    
+<!--http://stackoverflow.com/questions/9900311/how-do-i-target-only-internet-explorer-10-for-certain-situations-like-internet-e -->    
+   <script>
+    /*@cc_on
+      @if (@_jscript_version == 10)
+          document.write('<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.29/angular.min.js"/>''<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.29/angular-cookies.js">');
+      @end
+    @*/
+</script>
+    
+    <!-- Needed for html compatibility -->
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    
+    <!--JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    
+    <!--Bootstrap is needed as a simple css solution -->
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    
+    <!--Angular route and angular messages are tools for better data returning. Route is used for "one page" websites. Angular Messages is used for validation -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js"></script>
+    
+    <!-- Socket.io will be used for realtime data returning such as live updating of tickets and notifications. It can also be used for login.  -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    
+    <!-- Code js is used for defining how data is returned. Turning multiple sql statements and more into something as simple as {{x.variable}} -->
+    <script src="./code.js"></script>
+    
+    <!--CSS for sidebar -->
+    <link href="./css/simple-sidebar.css" rel="stylesheet">
+</head>
+    <!--myApp defines the web application information -->
+<body ng-app="myApp">
+    
+    <!--Navbar -->
+<nav role="navigation" class="navbar navbar-default navbar-fixed-top" style="position: fixed; top: 0; width: 100%; z-index: 5;" ng-controller="data_view">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!--<a href="#Home" class="navbar-brand">EventList</a>-->
+                <a href="#" class="navbar-brand">Events</a>
+            </div>
+            <!-- Collection of nav links and other content for toggling -->
+            <div id="navbarCollapse" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="../Cal.html" id="NavCal">Calendar</a></li>
+                    <!--<li><a href="#/redir/t" >Events</a></li>-->
+                    <li><a href="#" id="NavEList">Events</a></li>
+                    <li ng-show="LoggedIn"><a href="../schedule.html">New Event</a></li>
+                    <!--<li><a href="../schedule.html" id="NavNSched">New Sched</a></li>-->
+                </ul>
+                <ul class="nav navbar-nav navbar-right" style="margin-right: 10px;">
+                   <li ng-show="LoggedIn"><a href="http://localhost:3000/Login.html">Logout<!--<div ng-show="!LoggedIn">Login</div>--></a></li>
+                     <!--<li><a href="/redir/t">Logout</a></li>-->
+                </ul>
+            </div>
+        </nav>
+    
+    <!--Sidebar -->
+    
+    
+    <!--Defines the location for dynamic page loading -->
+    <div id="main">
+        <div style="margin-top:70px;"></div>
+        <div ng-view></div>
+            </div>
+
+    <!--left and right div's are used as space modifiers. If the page shrinks or grows, the important stuff or sidebar will grow or shrink to stay centered -->
+
+    
+  
+    <!-- Menu Toggle Script -->
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!-- x is the pointer for the sql return. Basically, whatever sql is used in the controller is what is returned. From there use {{x.(variable in database)}} to get data -->
+<div>
+    <h1><!--{{x.building}}--> Events:</h1>
+    <div class="container">
+    <div class="col-xs-6"><button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button">Building <span class="caret"></span></button></div>
+    <div class="col-xs-6"><button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button">Age Group <span class="caret"></span></button></div>
+</div>
+        <table class="table table-striped">
+            <!--ng-repeat allows for autogeneration of tables -->
+        <tr ng-repeat="x in data">
+                <td><div class="media">
+                    <div class="media-left">
+                    <a><img class="media-object" />(Image)</a>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">{{x.title}}: <a ng-href="#event/{{x.id}}">More information</a></h4>
+                    <div class="container">
+                        <div class="col-sm-3 col-xs-12" text-left>Start: {{x.start}}</div>
+                        <div class="col-sm-3 col-xs-12" text-left>End: {{x.end}}</div>
+                    </div>
+                    <p>{{x.eDescription}}</p>
+                </div>
+                    </div></td>
+        </tr>
+        </table>
+    
+    
+</div>

@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
+    <title></title>
+    <link rel="stylesheet" href="./events/css/IT.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.js"></script>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    
+    <!--JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    
+    <!--Bootstrap is needed as a simple css solution -->
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    
+    <!--Angular route and angular messages are tools for better data returning. Route is used for "one page" websites. Angular Messages is used for validation -->
+    
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+    
+    <!-- Socket.io will be used for realtime data returning such as live updating of tickets and notifications. It can also be used for login.  -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+
+    <!-- Code.js is used for defining how data is returned. Turning multiple sql statements and more into something as simple as {{x.variable}} -->
+    <script src="./code.js"></script>
+    
+    <script src="./build/jquery.datetimepicker.full.min.js"></script>
+    <script src="./build/jquery.periodpicker.min.js"></script>
+    <script src="./build/jquery.timepicker.min.js"></script>
+    <script src="./build/jquery.mousewheel.min.js"></script>
+    <link rel="stylesheet" href="./css/jquery.periodpicker.min.css">
+	<link rel="stylesheet" href="./css/jquery.timepicker.css">
+    <link rel="stylesheet" type="text/css" href="./css/jquery.datetimepicker.css"/>
+    
+    
+    
+    <!--Used to send Checkboxes-->
+    <script src="./checklist-model.js"></script>
+    
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js'></script>
+<script src='../fullcalendar.min.js'></script>
+<link href='../fullcalendar.css' rel='stylesheet' />
+<link href='../fullcalendar.print.css' rel='stylesheet' media='print' />
+<script src='../calendar.js'></script>
+    
+    
+    <!--For validating input-->
+    <script type="text/javascript" src="./ngRemoteValidate.0.6.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-cookies.js"></script>
+    
+</head>
+<body ng-app="myScheduleApp">
+    <nav role="navigation" class="navbar navbar-default navbar-fixed-top" style="position: fixed; top: 0; width: 100%; z-index: 5;"  ng-controller="data_adget">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!--<a href="#Home" class="navbar-brand">EventList</a>-->
+                <a href="" class="navbar-brand">Events</a>
+            </div>
+            <!-- Collection of nav links and other content for toggling -->
+            <div id="navbarCollapse" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://localhost/epl/eventkeeper/Cal.html" id="NavCal">Calendar</a></li>
+                    <!--<li><a href="#/redir/t" >Events</a></li>-->
+                    <li><a href="http://localhost/epl/eventkeeper/events" id="NavEList">Events</a></li>
+                    <li><a href="http://localhost/epl/eventkeeper/schedule.html">New Event</a></li>
+                    <!--<li><a href="../schedule.html" id="NavNSched">New Sched</a></li>-->
+                </ul>
+               <ul class="nav navbar-nav navbar-right" style="margin-right: 10px;">
+                   <li><a href="http://localhost:3000/Login.html">{{schedule.LoggedIn}}</a></li>
+                     <!--<li><a href="/redir/t">Logout</a></li>-->
+                </ul>
+            </div>
+        </nav>
+        <div style="margin-top:70px;"></div>
+    <div class=" col-md-2 hidden-xs hidden-sm"></div>
+    <div class=" col-md-8 col-xs-12">
+        <div ng-controller="CalendarPrepCtrl" style="width: 550px; height: 550px;">
+            <div id="calendar" class="calendar" ng-model="eventSources" calendar="myCalendar" config="uiConfig.calendar" ui-calendar="uiConfig.calendar"></div>
+
+            <!--<div class="alert-success calAlert" ng-show="alertMessage != undefined && alertMessage != ''">
+                <h4>{{alertMessage}}</h4>
+            </div>-->
+
+            <ul class="unstyled">
+                <li ng-repeat="e in events | filter:currentDate">
+                    <div class="alert alert-info">
+                        <a class="close" ng-click="remove($index)"><i class="icon-remove"></i></a>
+                        <b> {{e.title}}</b> - {{e.start | date:"MMM dd"}}
+                    </div>
+                </li>
+            </ul>
+        </div>
+    
+    
+    <ng-form id="schedule" name="schedule" action="" novalidate>
+        
+            <div ng-controller="data_adget">
+        <table class="table table-striped" style="outline: 1px solid black;">
+        <tr>
+            <td>Event Name: </td> <td><div class="col-xs-4"><input type="text" ng-model="schedule.eTitle" id="eTitle" name="Title" ng-keypress="$event.keyCode == 13 && checkTime(schedule);" required ></div><div class="checkbox-inline col-xs-2">
+                  <label><input type="checkbox" ng-model="schedule.ePlaceholder" ng-true-value="1" ng-false-value="0" ng-keypress="$event.keyCode == 13 && checkTime(schedule);">Placeholder? {{schedule.ePlaceholder}}</label>
+                </div>
+            <div class="checkbox-inline col-xs-2">
+                  <label><input type="checkbox" ng-model="schedule.RegisCheck" ng-true-value="0" ng-false-value="1" ng-keypress="$event.keyCode == 13 && checkTime(schedule);">Registration Required? {{schedule.RegisCheck}}</label>
+                </div>
+            <!--<div class="checkbox-inline col-xs-2">
+                  <label><input type="checkbox" ng-model="schedule.eSpeaker" ng-true-value="true" ng-false-value="false">Speaker Request? {{schedule.eSpeaker}}</label>
+                </div>-->
+            </td></tr>
+            <tr ng-if="schedule.show && schedule.ePlaceholder == 0  && schedule.eSpeaker != true">
+                <td>Current times:</td>
+                <td>
+                     
+            
+             <div class="col-md-3">
+                 Start Time:{{schedule.fstart}}
+        </div>
+                         <div class="col-md-3">
+                             End Time:{{schedule.fend}}
+        </div>
+    
+                </td>
+                
+            </tr>
+            <tr ng-if="schedule.show && schedule.ePlaceholder == 0  && schedule.eSpeaker != true">
+                <td></td>
+                <td>
+                     
+            
+             <div class="col-md-3">
+                 Setup Time: {{schedule.fprep}}
+        </div>
+                         
+                         <div class="col-md-3">
+                 Cleanup Time: {{schedule.ftear}}
+        </div>
+   
+                </td>
+            </tr>
+            <tr>
+                <td>Program time:</td>
+                <td>
+                     <div ng-controller="Datepicker">
+            
+             <div class="col-xs-12 col-sm-6 col-md-2">
+                 Start Date: {{schedule.eStYear}}A
+                 <!--//2016-04-28 09:00:00-->
+                 <select style="width: 135px;" class="form-control" id="eStMonth" ng-model="schedule.eStMonth" ng-keypress="$event.keyCode == 13 && checkTime(schedule);">
+                    <option value="">---Month---</option>
+                    <option value="01">Jan</option>
+                    <option value="02">Feb</option>
+                    <option value="03">Mar</option>
+                    <option value="04">Apr</option>
+                    <option value="05">May</option>
+                    <option value="06">Jun</option>
+                    <option value="07">Jul</option>
+                    <option value="08">Aug</option>
+                    <option value="09">Sep</option>
+                    <option value="10">Oct</option>
+                    <option value="11">Nov</option>
+                    <option value="12">Dec</option>                   
+                </select>
+                <select style="width: 135px;" class="form-control" id="Date" ng-model="schedule.eStDay" ng-keypress="$event.keyCode == 13 && checkTime(schedule);">
+                    <option value="">---Day---</option>
+                    <option value="01">1</option>
+                    <option value="02">2</option>
+                    <option value="03">3</option>
+                    <option value="04">4</option>
+                    <option value="05">5</option>
+                    <option value="06">6</option>
+                    <option value="07">7</option>
+                    <option value="08">8</option>
+                    <option value="09">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    <option value="25">25</option>
+                    <option value="26">26</option>
+                    <option value="27">27</option>
+                    <option value="28">28</option>
+                    <option value="29">29</option>
+                    <option value="30">30</option>
+                    <option value="31">31</option>                  
+                </select>
+                <select style="width: 135px;" class="form-control" id="Date" ng-model="schedule.eStYear" ng-keypress="$event.keyCode == 13 && checkTime(schedule);">
+                    <option value="">---Year---</option>
+                    <option value="2016">2016</option>
+                    <option value="2017">2017</option>
+                    <option value="2018">2018</option>
+                    <option value="2019">2019</option>
+                    <option value="2020">2020</option>              
+                </select>
+                 <!--{{schedule.eStart}}-->
+                 <!--<input type="text" id="eStart" data-format="DD-MM-YYYY" data-template="D MMM YYYY" name="eStart"  ng-model="schedule.eStart">-->
+            <!--<input type="text" value="" id="perpickstart1" ng-init="schedule.eStart"/>
+            <p class="input-group">
+                <input type="text" ng-model="schedule.eStart" id="eStart" placeholder="Event Start"/>
+            </p>-->
+        </div>
+                         
+        <div class="col-xs-12 col-sm-6 col-md-2">
+                             Start Time:
+                    <!--<input type="text" ng-model="schedule.eStHour" style="float:left;"><p style="float:left;margin-left: 10px; margin-right:10px;"> : </p><input type="text" ng-model="schedule.eStMin" style="float:left;">--> 
+                <select style="width: 135px;" class="form-control" id="eStH" ng-model="schedule.eStH" ng-keypress="$event.keyCode == 13 && checkTime(schedule);">
+                    <option value="">---Hour---</option>
+                    <option value="01">01</option>
+                    <option value="02">02</option>
+                    <option value="03">03</option>
+                    <option value="04">04</option>
+                    <option value="05">05</option>
+                    <option value="06">06</option>
+                    <option value="07">07</option>
+                    <option value="08">08</option>
+                    <option value="09">09</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>              
+                </select>
+                <select style="width: 135px;" class="form-control" id="eStM" ng-model="schedule.eStM" ng-keypress="$event.keyCode == 13 && checkTime(schedule);">
+                    <option value="">---Min---</option>
+                    <option value="00">00</option>
+                    <option value="15">15</option>
+                    <option value="30">30</option>
+                    <option value="45">45</option>
+                </select><select style="width: 135px; float:left;" class="form-control" id="AmPm" ng-model="schedule.eStAmPm" ng-keypress="$event.keyCode == 13 && checkTime(schedule);">
+                    <option value="">---am/pm---</option>
+                    <option value="0">a.m</option>
+                    <option value="12">p.m</option>              
+                </select>
+                <!--<input type="text" ng-model="schedule.eStart"/> {{schedule.eStart}}-->
+            <!--<input type="text" value="" id="perpickstart2"/>
+            <p class="input-group">
+              <input type="text" class="form-control" datepicker-popup ng-model="schedule.eEnd" is-open="status.opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" id="eEnd" placeholder="Event End"/>
+            </p>-->
+        </div>
+                         
+        <div class="col-xs-12 col-sm-6 col-md-2">
+                             End Time:
+                    <!--<input type="text" ng-model="schedule.eStHour" style="float:left;"><p style="float:left;margin-left: 10px; margin-right:10px;"> : </p><input type="text" ng-model="schedule.eStMin" style="float:left;">--> 
+                <select style="width: 135px;" class="form-control" id="eEnH" ng-model="schedule.eEnH" ng-keypress="$event.keyCode == 13 && checkTime(schedule);">
+                    <option value="">---Hour---</option>
+                    <option value="01">01</option>
+                    <option value="02">02</option>
+                    <option value="03">03</option>
+                    <option value="04">04</option>
+                    <option value="05">05</option>
+                    <option value="06">06</option>
+                    <option value="07">07</option>
+                    <option value="08">08</option>
+                    <option value="09">09</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>              
+                </select>
+                <select style="width: 135px;" class="form-control" id="eEnM" ng-model="schedule.eEnM" ng-keypress="$event.keyCode == 13 && checkTime(schedule);">
+                    <option value="">---Min---</option>
+                    <option value="00">00</option>
+                    <option value="15">15</option>
+                    <option value="30">30</option>
+                    <option value="45">45</option>
+                </select><select style="width: 135px; float:left;" class="form-control" id="EnAmPm" ng-model="schedule.eEnAmPm" ng-keypress="$event.keyCode == 13 && checkTime(schedule);">
+                    <option value="">---am/pm---</option>
+                    <option value="0">a.m</option>
+                    <option value="12">p.m</option>              
+                </select>
+                <!--<input type="text" ng-model="schedule.eStart"/> {{schedule.eStart}}-->
+            <!--<input type="text" value="" id="perpickstart2"/>
+            <p class="input-group">
+              <input type="text" class="form-control" datepicker-popup ng-model="schedule.eEnd" is-open="status.opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" id="eEnd" placeholder="Event End"/>
+            </p>-->
+        </div>
+                         
+        <div class="col-xs-12 col-sm-6 col-md-2">
+                             Prep Time:
+                    <!--<input type="text" ng-model="schedule.eStHour" style="float:left;"><p style="float:left;margin-left: 10px; margin-right:10px;"> : </p><input type="text" ng-model="schedule.eStMin" style="float:left;">--> 
+                <select style="width: 135px;" class="form-control" id="ePrH" ng-model="schedule.ePrH" ng-keypress="$event.keyCode == 13 && checkTime(schedule);">
+                    <option value="">---Hour---</option>
+                    <option value="01">01</option>
+                    <option value="02">02</option>
+                    <option value="03">03</option>
+                    <option value="04">04</option>
+                    <option value="05">05</option>
+                    <option value="06">06</option>
+                    <option value="07">07</option>
+                    <option value="08">08</option>
+                    <option value="09">09</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>              
+                </select>
+                <select style="width: 135px;" class="form-control" id="ePrM" ng-model="schedule.ePrM" ng-keypress="$event.keyCode == 13 && checkTime(schedule);">
+                    <option value="">---Min---</option>
+                    <option value="00">00</option>
+                    <option value="15">15</option>
+                    <option value="30">30</option>
+                    <option value="45">45</option>
+                </select><select style="width: 135px; float:left;" class="form-control" id="AmPm" ng-model="schedule.ePrAmPm" ng-keypress="$event.keyCode == 13 && checkTime(schedule);">
+                    <option value="">---am/pm---</option>
+                    <option value="0">a.m</option>
+                    <option value="12">p.m</option>              
+                </select>
+                <!--<input type="text" ng-model="schedule.eStart"/> {{schedule.eStart}}-->
+            <!--<input type="text" value="" id="perpickstart2"/>
+            <p class="input-group">
+              <input type="text" class="form-control" datepicker-popup ng-model="schedule.eEnd" is-open="status.opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" id="eEnd" placeholder="Event End"/>
+            </p>-->
+        </div>
+                         
+        <div class="col-xs-12 col-sm-6 col-md-2">
+                             Tear Down Time:
+                    <!--<input type="text" ng-model="schedule.eStHour" style="float:left;"><p style="float:left;margin-left: 10px; margin-right:10px;"> : </p><input type="text" ng-model="schedule.eStMin" style="float:left;">--> 
+                <select style="width: 135px;" class="form-control" id="eTdH" ng-model="schedule.eTdH" ng-keypress="$event.keyCode == 13 && checkTime(schedule);">
+                    <option value="">---Hour---</option>
+                    <option value="01">01</option>
+                    <option value="02">02</option>
+                    <option value="03">03</option>
+                    <option value="04">04</option>
+                    <option value="05">05</option>
+                    <option value="06">06</option>
+                    <option value="07">07</option>
+                    <option value="08">08</option>
+                    <option value="09">09</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>              
+                </select>
+                <select style="width: 135px;" class="form-control" id="eTdM" ng-model="schedule.eTdM" ng-keypress="$event.keyCode == 13 && checkTime(schedule);">
+                    <option value="">---Min---</option>
+                    <option value="00">00</option>
+                    <option value="15">15</option>
+                    <option value="30">30</option>
+                    <option value="45">45</option>
+                </select><select style="width: 135px; float:left;" class="form-control" id="TdAmPm" ng-model="schedule.eTdAmPm" ng-keypress="$event.keyCode == 13 && checkTime(schedule);">
+                    <option value="">---am/pm---</option>
+                    <option value="0">a.m</option>
+                    <option value="12">p.m</option>              
+                </select>
+
+                <!--<input type="text" ng-model="schedule.eStart"/> {{schedule.eStart}}-->
+            <!--<input type="text" value="" id="perpickstart2"/>
+            <p class="input-group">
+              <input type="text" class="form-control" datepicker-popup ng-model="schedule.eEnd" is-open="status.opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" id="eEnd" placeholder="Event End"/>
+            </p>-->
+        </div>
+    </div>
+                </td>
+                
+            </tr>
+            <!--<tr>
+                <td></td>
+                <td>
+                     <div ng-controller="Datepicker">
+            
+             <div class="col-md-3">
+                 Setup Start Time:
+            <input type="text" value="" id="perpickstart3"/>
+            <p class="input-group">
+              <input type="text" class="form-control" datepicker-popup ng-model="schedule.prepStart" is-open="status.opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" id="prepStart" placeholder="Setup Start" />
+            </p>
+        </div>
+                         
+                         <div class="col-md-3">
+                 Cleanup Time:
+            <input type="text" value="" id="perpickstart4"/>
+            <p class="input-group">
+              <input type="text" class="form-control" datepicker-popup ng-model="schedule.TearDownEnd" is-open="status.opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" id="TearDownEnd" placeholder="Cleanup End"/>
+            </p>
+        </div>
+    </div>
+                </td>
+            </tr>-->
+            <tr>
+             <td>allDay:</td><td>
+                <div class="radio">
+    <label>
+        <input type="radio" ng-model="schedule.eAllDay" value=true />Yes</label>
+</div>
+                <div class="radio">
+    <label>
+        <input type="radio" ng-model="schedule.eAllDay" value=false />No</label>
+</div> 
+                </td>
+            </tr>
+            <tr>
+            <td>Location:</td><td class="col-xs-12">
+                <!--<div class="col-xs-3"></div>-->
+                <!--http://stackoverflow.com/questions/13345927/angular-routing-overrides-href-behavior-utilized-by-tab-and-collapse-panel-plugi-->
+                <h4>Current Location: {{schedule.Building}} | {{schedule.Room}}</h4>
+                 <div class="panel-group" id="accordion1">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion1" data-target="#collapse1">Bookmobile
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse1" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="col-xs-12"><label>
+                            <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='Bookmobile'" ng-mouseover="WR = 'img/1/2.jpg'" value="Bookmobile" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>Select Location as Bookmobile</label>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                     
+                <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion1" data-target="#collapse2">Central
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse2" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="col-xs-6"><img class="col-xs-12" ng-src="{{CE}}"></div>
+                        <div class="panel-group" id="accordion2">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion2" data-target="#collapse2-1">Children's Room (Max Capacity: 15)
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse2-1" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <div class="col-xs-12"><label>
+                                          <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='Central'" value="C Childrens" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/> Select Room</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion2" data-target="#collapse2-2">Scheide Room (Max Capacity: 60)
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse2-2" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                    <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room"  ng-change="schedule.Building='Central'" ng-mouseover="CE = 'img/2/1.jpg'" value="B-1 Activity" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>B-1 Activity</label>
+                                        </div>
+                                                        <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='Central'" ng-mouseover="CE = 'img/2/2.jpg'" value="B-2 Artsy Toddler ‘A’" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>B-2 Artsy Toddler ‘A’</label>
+                                        </div>
+                                                         <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='Central'" ng-mouseover="CE = 'img/2/3.jpg'" value="B-3 Board" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>B-3 Board</label>
+                                        </div>
+                                                         <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='Central'" ng-mouseover="CE = 'img/2/4.jpg'" value="B-4 Banquet" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>B-4 Banquet</label>
+                                        </div>           
+                                                            <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='Central'" ng-mouseover="CE = 'img/2/5.jpg'" value="B-5 Block" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>B-5 Block</label>
+                                        </div>           
+                                                            <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='Central'" ng-mouseover="CE = 'img/2/6.jpg'" value="B-6 Classroom" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>B-6 Classroom</label>
+                                        </div>           
+                                                            <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='Central'" ng-mouseover="CE = 'img/2/7.jpg'" value="B-7 Empty" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>B-7 Empty</label>
+                                        </div>           
+                                                            <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='Central'" ng-mouseover="CE = 'img/2/8.jpg'" value="B-8 Forum" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>B-8 Forum</label>
+                                        </div>           
+                                                            <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='Central'" ng-mouseover="CE = 'img/2/9.jpg'" value="B-9 Party" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>B-9 Party</label>
+                                        </div>           
+                                                            <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='Central'" ng-mouseover="CE = 'img/2/10.jpg'" value="B-10 Presentation" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>B-10 Presentation</label>
+                                        </div>           
+                                                            <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='Central'" ng-mouseover="CE = 'img/2/11.jpg'" value="B-11 Square" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>B-11 Square</label>
+                                        </div>           
+                                                            <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='Central'" ng-mouseover="CE = 'img/2/12.jpg'" value="B-12 Standard 1" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>B-12 Standard 1</label>
+                                        </div>             
+                                                            <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='Central'" ng-mouseover="CE = 'img/2/13.jpg'" value="B-13	Standard 2" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>B-13 Standard 2</label>
+                                        </div>             
+                                                            <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='Central'" ng-mouseover="CE = 'img/2/14.jpg'" value="B-14 Theater" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>B-14 Theater</label>
+                                        </div>             
+                                                            <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='Central'" ng-mouseover="CE = 'img/2/15.jpg'" value="B-15 Standard Program 3" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>B-15 Standard Program 3</label>
+                                        </div>             
+                                    </div>
+                                </div>
+                            </div>
+                        
+                        <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion2" data-target="#collapse2-3">Small Conference Room (Max Capacity: 12)
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse2-3" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <label>
+        <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='Central'" value="Small Central" />Select Room</label>
+                                    </div>
+                                </div>
+                            </div>
+                        <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion2" data-target="#collapse2-4">Open Area
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse2-4" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="col-xs-12"><label>
+                                          <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='Central'" value="Central" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/> Select Location as Central</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                     
+                <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion1" data-target="#collapse3">Keystone
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse3" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="col-xs-12"><label>
+                            <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='Keystone'" value="Keystone" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>Select Location as Keystone</label>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                     
+                <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion1" data-target="#collapse4">North
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse4" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="col-xs-3"><label>
+                          <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='North'" value="Room 210" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/> Room 210</label>
+
+                        </div>
+                        <div class="col-xs-3"><label>
+                          <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='North'" value="Room 231" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/> Room 231</label>
+
+                        </div>
+                        <div class="col-xs-3"><label>
+                          <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='North'" value="LC125" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/> LC125</label>
+
+                        </div>
+                        <div class="col-xs-12"><label>
+                          <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='North'" value="North" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/> Select Location as North</label>
+
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                     
+                <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion1" data-target="#collapse5">South
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse5" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="col-xs-12"><label>
+                            <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='South'" value="South" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>Select Location as South</label>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion1" data-target="#collapse6">West River
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse6" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <!--ng-mouseover="WR = 'img/1/2.jpg'"-->
+                        <div class="col-xs-6"><img class="col-xs-12" ng-src="{{WR}}"></div>
+                        <div class="panel-group" id="accordion3">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion3" data-target="#collapse6-1">Miller Room (Max Capacity: 80)
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse6-1" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" ng-mouseover="WR = 'img/3/1.jpg'" value="C-1 Activity" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>C-1 Activity</label>
+                                        </div>
+                                                        <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" ng-mouseover="WR = 'img/3/2.jpg'" value="C-2 Banquet (Rectangle)" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>C-2 Banquet (Rectangle)</label>
+                                        </div>
+                                                         <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" ng-mouseover="WR = 'img/3/3.jpg'" value="C-3 Banquet (Round)" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>C-3 Banquet (Round)</label>
+                                        </div>
+                                                         <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" ng-mouseover="WR = 'img/3/4.jpg'" value="C-4 Block" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>C-4 Block</label>
+                                        </div>           
+                                                            <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" ng-mouseover="WR = 'img/3/5.jpg'" value="C-5 Board" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>C-5 Board</label>
+                                        </div>           
+                                                            <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" ng-mouseover="WR = 'img/3/6.jpg'" value="C-6 Classroom 1" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>C-6 Classroom 1</label>
+                                        </div>           
+                                                            <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" ng-mouseover="WR = 'img/3/7.jpg'" value="C-7 Classroom 2" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>C-7 Classroom 2</label>
+                                        </div>           
+                                                            <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" ng-mouseover="WR = 'img/3/8.jpg'" value="C-8 Craft" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>C-8 Craft</label>
+                                        </div>           
+                                                            <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" ng-mouseover="WR = 'img/3/9.jpg'" value="C-9 Empty" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>C-9 Empty</label>
+                                        </div>           
+                                                            <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" ng-mouseover="WR = 'img/3/10.jpg'" value="C-10 Forum" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>C-10 Forum</label>
+                                        </div>           
+                                                            <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" ng-mouseover="WR = 'img/3/11.jpg'" value="C-11 Presentation" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>C-11 Presentation</label>
+                                        </div>           
+                                                            <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" ng-mouseover="WR = 'img/3/12.jpg'" value="C-12 Square" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>C-12 Square</label>
+                                        </div>             
+                                                            <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" ng-mouseover="WR = 'img/3/13.jpg'" value="C-13 Standard" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>C-13 Standard</label>
+                                        </div>             
+                                                            <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" ng-mouseover="WR = 'img/3/14.jpg'" value="C-14 Theater" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>C-14 Theater</label>
+                                        </div>             
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion3" data-target="#collapse6-2">2nd Floor Conference Room (Max Capacity: 30)
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse6-2" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" ng-mouseover="WR = 'img/1/1.jpg'" value="A-1 Block 1" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>A-1 Block 1</label>
+                                        </div>
+                                                        <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" ng-mouseover="WR = 'img/1/2.jpg'" value="A-2 Block 2" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>A-2 Block 2</label>
+                                        </div>
+                                                         <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" ng-mouseover="WR = 'img/1/3.jpg'" value="A-3 Classroom 1" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>A-3 Classroom 1</label>
+                                        </div>
+                                                         <div class="col-xs-3">
+                                            <label>
+                                                <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" ng-mouseover="WR = 'img/1/4.jpg'" value="A-4 Classroom 2" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>A-4 Classroom 2</label>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion3" data-target="#collapse6-3">Children's Room (Max Capacity: 20)
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse6-3" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="col-xs-12"><label>
+                                          <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" value="WR Childrens" /> Select Room</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion3" data-target="#collapse6-4">Teen Lounge
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse6-4" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="col-xs-12"><label>
+                                          <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" value="Teen Lounge" /> Select Room</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion3" data-target="#collapse6-5">Tutor Rooms (Max Capacity: 2)
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse6-5" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="col-xs-3"><label>
+                                          <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" value="Tutor Room #1" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/> Tutor Room #1</label>
+                                        </div>
+                                        <div class="col-xs-3"><label>
+                                          <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" value="Tutor Room #2" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/> Tutor Room #2</label>
+                                        </div>
+                                        <div class="col-xs-3"><label>
+                                          <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" value="Tutor Room #3" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/> Tutor Room #3</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion3" data-target="#collapse6-8">Open Area
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse6-8" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="col-xs-3"><label>
+                                          <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" value="1st Floor Open Area" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/> 1st Floor</label>
+                                        </div>
+                                        <div class="col-xs-3"><label>
+                                          <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='West River'" value="2nd Floor Open Area" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/> 2nd Floor</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+                     
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion1" data-target="#collapse7">Other
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse7" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="col-xs-12"><label>
+              <input type="radio" ng-model="schedule.Room" ng-change="schedule.Building='Other'" value="Other" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"/>Other</label> <label style="margin-left:20px"> Location Name: <input type="text" ng-model="schedule.Location" id="Location"  name="Location"ng-keypress="$event.keyCode == 13 && checkTime(schedule);"></label></div><div class="col-xs-12"><textarea ng-model="schedule.eOptionLoc" id="OptionLoc" form="schedule" placeholder="Please describe the Location" maxlength="500" rows="10" cols="50" style="resize:none;" ng-keypress="$event.keyCode == 13 && checkTime(schedule);"></textarea></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                
+              
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                 <div class="col-xs-3"><input type="submit" ng-click="checkTime(schedule);" ng-model="schedule.scheduleSend" id="send" value="Check Times"></div>
+                    <div class="col-xs-3"><div id="timecheck">For reference</div></div>
+                </td>
+                
+            </tr>
+            </table>
+                <table class="table table-striped" style="outline: 1px solid black;">
+             <tr>
+            <td>Contact Name: </td> <td><input type="text" ng-model="schedule.ContName" id="ContName" name="Contact" ng-keypress="$event.keyCode == 13 && updateSchedule(schedule)" required >
+            </td></tr>
+             <tr>
+            <td>Contact Phone: </td> <td><input type="tel" ng-model="schedule.ePhone" id="ContPhone" name="Phone" ng-keypress="$event.keyCode == 13 && updateSchedule(schedule)" required >
+            </td></tr> 
+            <tr>
+            <td>Contact Email: </td> <td><input type="text" ng-model="schedule.ContMail" id="ContMail" name="Mail" ng-keypress="$event.keyCode == 13 && updateSchedule(schedule)" required >
+            </td></tr>
+            </table>
+                <table class="table table-striped" style="outline: 1px solid black;">
+            <tr ng-if="schedule.ePlaceholder == 0  && schedule.eSpeaker != true"><td></td><td><div class="col-xs-3">
+        <select style="width: 170px;" class="form-control" id="Age" ng-model="schedule.Age">
+                    <option value="">--Age Group--</option>
+                    <option value="Birth to Pre-K">Birth to Pre-K</option>
+                    <option value="School Age">School Age</option>
+                    <option value="Family">Family</option>
+                    <option value="Teens">Teens</option>
+                    <option value="Adults">Adults</option>                   
+                </select></div></td></tr>
+            <tr ng-if="schedule.ePlaceholder == 0  && schedule.eSpeaker != true">
+            <td>Expected Attendance? </td> <td><input type="number" ng-model="schedule.eAttend" id="eAttend" name="Attendance" required >
+            </td></tr>
+            <tr ng-if="schedule.ePlaceholder == 0 && schedule.RegisCheck != '1'  && schedule.eSpeaker != true">
+            <td>Max. Attendance? </td> <td><input type="number" ng-model="schedule.eMaxAtt" id="eMaxAtt" name="MaxAttendance" required >
+            </td></tr>
+            <tr ng-if="schedule.ePlaceholder == 0 && schedule.RegisCheck != '1'  && schedule.eSpeaker != true">
+            <td># of Chairs </td> <td><input type="number" ng-model="schedule.Chairs" id="Chairs" name="Chairs" required >
+            </td></tr>
+            <!--<tr ng-if="schedule.ePlaceholder == 0">
+            <td>Speaker Request needed?</td><td>
+                <div class="radio">
+    <label>
+        <input type="radio" ng-model="schedule.eSpeaker" value=true />Yes</label>
+</div>
+                <div class="radio">
+    <label>
+        <input type="radio" ng-model="schedule.eSpeaker" value=false />No</label>
+</div>
+                </td>
+            </tr>-->
+            <tr>
+            <td>Patron event?</td><td>
+                <div class="radio">
+    <label>
+        <input type="radio" ng-model="schedule.ePatron" value=true />Yes</label>
+</div>
+                <div class="radio">
+    <label>
+        <input type="radio" ng-model="schedule.ePatron" value=false />No</label>
+</div>
+                </td>
+            </tr>
+            <!--<tr>
+            <!--<td>Repeating day?: (optional [format #,# with 1=Sunday and 7=Saturday]) </td> <td><input type="text" ng-model="schedule.eRepeat" id="eRepeat" name="Repeat" >-->
+            <!--<td>Repeating day?:</td><td>
+           
+                <div ng-repeat="eRepeat in schedule.eRepeat">
+  <input type="checkbox" ng-model="eRepeat.enabled">{{ eRepeat.name }}</input>
+</div>
+                </td>
+            </td></tr>-->
+            <tr><td>Description:</td><td><textarea ng-model="schedule.eDescription" id="Description" form="schedule" placeholder="Please describe the event" maxlength="500" rows="10" cols="50" style="resize:none;"></textarea></td></tr>
+            
+            <tr><td>Equipment:</td><td><textarea ng-model="schedule.eEquipment" id="Equipment" form="schedule" placeholder="Please enter what equipment you'd like" maxlength="500" rows="10" cols="50" style="resize:none;"></textarea></td></tr>
+            
+            <tr><td>Comments:</td><td><textarea ng-model="schedule.eComment" id="Comment" form="schedule" placeholder="Anything else we should know?" maxlength="500" rows="10" cols="50" style="resize:none;"></textarea></td></tr>
+            <tr><td></td><td><div class="col-xs-3"><div id="timecheck2">For reference</div></div></td></tr>
+            <tr>
+                <td></td><td><div class=" col-xs-2"><input type="submit" ng-click="updateSchedule(schedule);" ng-model="schedule.scheduleSend" id="send"/></div>
+                <div class=" col-xs-2"><input type="button" ng-click="Canceling();" ng-model="schedule.scheduleSend" value="Cancel"/></div>
+                <div class="checkbox-inline col-xs-2 disabled">
+                  <label><input type="checkbox" ng-model="schedule.CheckLy" ng-true-value="1" ng-false-value="0" value="" disabled>Director</label>
+                </div>
+                <div class="checkbox-inline col-xs-2 disabled">
+                  <label><input type="checkbox" ng-model="schedule.CheckJ" ng-true-value="1" ng-false-value="0" value="" disabled>PR</label>
+                </div>
+                <div class="checkbox-inline col-xs-2 disabled">
+                  <label><input type="checkbox" ng-model="schedule.CheckLak" ng-true-value="1" ng-false-value="0" value="" disabled>Administrative Assistant</label>
+                </div></td>
+            </tr>
+        </table>
+                </div>
+    </ng-form>
+    </div>
+    
+    <script>
+	$('#perpickstart1').periodpicker({
+		norange: true, // use only one value
+	cells: [1, 1], // show only one month
+    //disableDays: ['1.12.2015', '2.12.2015'],
+	resizeButton: false, // deny resize picker
+	fullsizeButton: false,
+	fullsizeOnDblClick: false,
+
+	timepicker: true, // use timepicker
+	timepickerOptions: {
+		hours: true,
+		minutes: true,
+		seconds: false,
+		ampm: true
+	},
+        end: '#eStart',
+        formatDateTime:'YYYY-MM-DD HH:mm',
+        formatDecoreDateTimeWithYear: 'MMM DD hh:mm a'
+	});
+	//$('#perpickstart1').periodpicker('value', ['12/03/2012']);
+	//$('#periodpickerstart').periodpicker('clear');
+	window.onerror = function (m){
+	alert(m)
+	}
+    
+    $('#perpickstart2').periodpicker({
+		norange: true, // use only one value
+	cells: [1, 1], // show only one month
+    //disableDays: ['1.12.2015', '2.12.2015'],
+	resizeButton: false, // deny resize picker
+	fullsizeButton: false,
+	fullsizeOnDblClick: false,
+
+	timepicker: true, // use timepicker
+	timepickerOptions: {
+		hours: true,
+		minutes: true,
+		seconds: false,
+		ampm: true
+	},
+        end: '#eEnd',
+        formatDateTime:'YYYY-MM-DD HH:mm',
+        formatDecoreDateTimeWithYear: 'MMM DD hh:mm a'
+	});
+	//$('#periodpickerstart').periodpicker('value', ['12.03.2010','15.03.2010']);
+	//$('#periodpickerstart').periodpicker('clear');
+	window.onerror = function (m){
+	alert(m)
+	}
+    
+    $('#perpickstart3').periodpicker({
+		norange: true, // use only one value
+	cells: [1, 1], // show only one month
+    //disableDays: ['1.12.2015', '2.12.2015'],
+	resizeButton: false, // deny resize picker
+	fullsizeButton: false,
+	fullsizeOnDblClick: false,
+
+	timepicker: true, // use timepicker
+	timepickerOptions: {
+		hours: true,
+		minutes: true,
+		seconds: false,
+		ampm: true
+	},
+        end: '#prepStart',
+        formatDateTime:'YYYY-MM-DD HH:mm',
+        formatDecoreDateTimeWithYear: 'MMM DD hh:mm a'
+	});
+	//$('#periodpickerstart').periodpicker('value', ['12.03.2010','15.03.2010']);
+	//$('#periodpickerstart').periodpicker('clear');
+	window.onerror = function (m){
+	alert(m)
+	}
+    
+    $('#perpickstart4').periodpicker({
+		norange: true, // use only one value
+	cells: [1, 1], // show only one month
+    //disableDays: ['1.12.2015', '2.12.2015'],
+	resizeButton: false, // deny resize picker
+	fullsizeButton: false,
+	fullsizeOnDblClick: false,
+
+	timepicker: true, // use timepicker
+	timepickerOptions: {
+		hours: true,
+		minutes: true,
+		seconds: false,
+		ampm: true
+	},
+        end: '#TearDownEnd',
+        formatDateTime:'YYYY-MM-DD HH:mm',
+        formatDecoreDateTimeWithYear: 'MMM DD hh:mm a'
+	});
+	//$('#periodpickerstart').periodpicker('value', ['12.03.2010','15.03.2010']);
+	//$('#periodpickerstart').periodpicker('clear');
+	window.onerror = function (m){
+	alert(m)
+	}
+	</script>
+        <script type="text/javascript">
+		/*$('#eStart').datetimepicker({
+            //format:'l m-d-Y h:i a',
+            format:'Y-m-d H:i'
+            
+        });
+        $('#eEnd').datetimepicker({
+            format:'Y-m-d H:i'
+        });
+        $('#prepStart').datetimepicker({
+            //format:'l m-d-Y h:i a',
+            format:'Y-m-d H:i'
+            
+        });
+        $('#TearDownEnd').datetimepicker({
+            format:'Y-m-d H:i'
+        });*/
+            
+            (function($, ng) {
+  'use strict';
+
+  var $val = $.fn.val; // save original jQuery function
+
+  // override jQuery function
+  $.fn.val = function (value) {
+    // if getter, just return original
+    if (!arguments.length) {
+      return $val.call(this);
+    }
+
+    // get result of original function
+    var result = $val.call(this, value);
+
+    // trigger angular input (this[0] is the DOM object)
+    ng.element(this[0]).triggerHandler('input');
+
+    // return the original result
+    return result; 
+  }
+})(window.jQuery, window.angular);
+	</script>
+
+<script>
+ var socket = io();
+ var $time = $('#timecheck');
+ var $time2 = $('#timecheck2');
+    
+ socket.on('check_time', function(res){
+     if (res == true)
+         {
+             var html = "Time is available";
+             //$time.html(html);
+             
+           $('#timecheck').append($('<li>').text("Time is available"));
+           console.log("Success");
+         }
+     else
+         {
+             var html = "Time is not available";
+             //$time.html(html);
+            $('#timecheck').append($('<p>').text("Time is aleady taken"));
+            console.log("Failed");
+         }
+     console.log("Reached Socket.on available");
+ });
+    
+socket.on('available', function(res){
+     $time.html(res);
+             
+           //$('#timecheck').append($('<li>').text("Time is available"));
+           console.log("Success");
+ });
+    
+socket.on('SchedChangeLoc', function(res){
+        //$time.html(res);
+        var redirect = function(link1){window.location = link1;};
+        console.log("Reached SchedChangeLoc")
+        redirect(res);
+    });
+    
+socket.on('SchedResp', function(res){
+       $time.html(res);
+       $time2.html(res);
+       //$('#timecheck').append($('<li>').text("Time is available"));
+       console.log("Success");
+    });   
+    
+</script>
+</body>
+</html>
